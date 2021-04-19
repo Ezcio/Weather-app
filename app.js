@@ -5,8 +5,9 @@ let weather = {
         .then((response) => response.json())
         .then((data)=> {
 
-            console.log(data)
-            console.log(this.displayWeather(data))
+            
+            this.displayWeather(data)
+            forecast.fetchWeather(city);
         
         })
         .catch((error) => alert('The city was wrong.\nTry Again.'));
@@ -19,7 +20,6 @@ let weather = {
         const {speed} = data.wind;
         const {country} = data.sys;
 
-        console.log(name, icon, description, temp, humidity,speed,country)
 
         this.insertInformation(name, icon, description, temp, humidity,speed)
     },
@@ -37,31 +37,26 @@ let weather = {
 }
 
 let forecast = {
-    fetchWeather : function (){
-        fetch(`https://api.openweathermap.org/data/2.5/forecast?q=Warszawa&units=metric&appid=${weather.apiKey}&cnt=5`)
+    fetchWeather : function (city){
+        fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${weather.apiKey}&cnt=5`)
         .then((respone)=>respone.json())
         .then((data) => {
-            console.log(data);
             this.insertInformation(data)
         })
     },
 
     insertInformation :  function (data){
-        // const {lenght} = data.list.lenght();
-        for (let i=1 ; i<5 ; i++){
-
-            let {temp_max} = data.list[i].main;
-            let {temp_min} = data.list[i].main;
+        
+        for (let i=0 ; i<5 ; i++){
+            let {temp} = data.list[i].main;
             let {icon} = data.list[i].weather[0];
             let {dt} = data.list[i];
-            let tempMinMax = temp_max +"/"+ temp_min;
+            
             let time = this.convertionUnixTime(dt);
 
-            
-            console.log("O to mi chodzi",tempMinMax)
-            console.log(`to jest temperatura z data min ${temp_min}`);
-            console.log(`to jest czas ${time}`);
-            console.log(`to jest sa icony ${icon}`)
+            this.appendInformation(temp,icon,time,i);
+
+           
         }
     },
     convertionUnixTime : function(dt){
@@ -73,7 +68,15 @@ let forecast = {
         return formattedTime;
         
     },
-    appendInformation : function(){
+    appendInformation : function(tempDate,icon,time,i){
+        const dates = document.querySelectorAll('.date-forecast');
+        dates[i].innerText = time;
+        
+        const icons = document.querySelectorAll('.icon-in-forecast')
+        icons[i].src = `https://openweathermap.org/img/wn/${icon}@2x.png`
+
+        const temp = document.querySelectorAll('.temp-forecast')
+        temp[i].innerText = `${tempDate} °C`
         
     }
 
@@ -86,10 +89,11 @@ const button = document.querySelector('button');
 
 search.addEventListener('keypress', (e)=>{
 
+    
+
     if (e.key =='Enter')
     {
         const city = document.querySelector('input').value;
-        console.log(city);
         weather.fetchWeather(city);
     }
 })
@@ -99,7 +103,6 @@ button.addEventListener('click', ()=>{
     if (document.querySelector('input').value)
     {
         const city = document.querySelector('input').value;
-        console.log(city);
         weather.fetchWeather(city);
     }
     else {

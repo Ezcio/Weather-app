@@ -7,6 +7,7 @@ body{
     height: 100vh;
     width: 100vw;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color:darksalmon;
@@ -75,4 +76,30 @@ button:hover{
 }
 .elo .description {
     font-size: 21px;
+}
+.cart-forecast {
+    display: none;
+    width: 100vw;
+    max-width: 420px;
+    padding: 2rem;
+    background-color: #121212;
+    color: white;
+    display: flex;
+    border-radius: 30px;
+    opacity: 0.8;
+    text-align: center;
+    /* overflow-x: scroll;
+    overflow-y: hidden; */
+    justify-content:left;
+    /* flex-wrap: wrap; */
+}
+.forecast {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    width: 25%;
+}
+.cart-forecast-visibilite{
+    display: block;
 }
